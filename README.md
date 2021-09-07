@@ -41,7 +41,7 @@ $ git clone git@git.unistra.fr:[login]/W31.git
 En trois commandes :
 ```sh
 $ cd W31
-$ git remote add prof https://git.unistra.fr/W31/w31.git
+$ git remote add prof git@git.unistra.fr:W31/w31.git
 $ git fetch prof
 ```
 
