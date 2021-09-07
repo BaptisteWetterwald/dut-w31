@@ -1,13 +1,20 @@
 TP n°1 : requêtes GET/POST, cookies et sessions
 ===============================================
 
-Tous vos fichiers PHP devront être déposés dans le répertoire `public_html` à la racine de de votre répertoire personnel. Il sera ainsi accessible à l'adresse `https://webetu.iutrs.unistra.fr/~[LOGIN_UNISTRA]/chemin_vers_le_fichier`.
+Afin de lancer un serveur local PHP, suivez les instructions de [PHPLOCAL.md](./PHPLOCAL.md).
 
 Exemple :
-- Mon pseudo unistra est `jdupont`
-- Je dépose le fichier `test.php` dans le répertoire `jdupont/public_html/TP1/`
-- Je peux visualiser mon fichier interprété par le serveur PHP à l'adresse `https://webetu.iutrs.unistra.fr/~jdupont/TP1/test.php`
-
+- Je crée un répertoire `TP1` qui contiendra les fichiers du 1er TP
+- J'ouvre un terminal et me rend dans ce répertoire :
+```bash
+$ cd /home/.../TP1/
+```
+- Je lance un serveur PHP avec la commande :
+```bash
+$ php -S localhost:port -t .
+```
+avec `port` un entier compris entre 1025 et 65535.
+- J'ouvre un navigateur à l'adress `http://localhost:port`
 
 Exercice 1 - Bonjour
 --------------------
