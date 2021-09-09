@@ -23,7 +23,7 @@ Il existe une méthode simple sous windows :
    1. Win+R, `cmd`
    2. `php --version`
 
-Si vous obtenez quelquechose comme
+Si vous obtenez quelque chose comme
 ```
 PHP 8.0.10 (cli) (built: Aug 26 2021 10:26:33) ( NTS )
 Copyright (c) The PHP Group
@@ -35,7 +35,7 @@ Si vous obtenez
 'php' n’est pas reconnu en tant que commande interne
 ou externe, un programme exécutable ou un fichier de commandes.
 ```
-Vérifiez votre PATH et vote chemin d'installation de PHP.
+Essayez de vous reconnecter à votre session utilisateur. Si le problème persiste, veuillez vérifier votre PATH et votre chemin d'installation de PHP.
 
 
 **Alternatives :**
