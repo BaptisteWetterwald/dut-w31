@@ -8,8 +8,37 @@ Installation sur une ordinateur personnel
 
 ### Sous windows
 
-**L'utilisation d'une distribution Linux est fortement recommandée.** Il n'y a pas de méthode "simple" sous Windows. Deux solutions :
+**L'utilisation d'une distribution Linux est fortement recommandée.**
 
+Il existe une méthode simple sous windows :
+
+1. Télécharget l'archive des binaires de PHP pour Windows ([x64](https://windows.php.net/downloads/releases/php-8.0.10-Win32-vs16-x64.zip) - [x86](https://windows.php.net/downloads/releases/php-8.0.10-Win32-vs16-x86.zip))
+2. Extraire quelquepart, de préférence dans `C:\Programmes\php` (créer le dossier).
+3. Ajouter le dossier au PATH:
+   1. Win+R, `SystemPropertiesAdvanced.exe`
+   2. Cliquer sur "Variables d'environnement"
+   3. Séléctionner `PATH`, cliquer sur "Modifier..."
+   4. Cliquer sur "Nouveau", coller le chemin d'installation de PHP (`C:\Programmes\php`).
+4. Vérifier que PHP est bien installé:
+   1. Win+R, `cmd`
+   2. `php --version`
+
+Si vous obtenez quelque chose comme
+```
+PHP 8.0.10 (cli) (built: Aug 26 2021 10:26:33) ( NTS )
+Copyright (c) The PHP Group
+Zend Engine v4.0.10, Copyright (c) Zend Technologies
+```
+Bravo, vous avez installé PHP.
+Si vous obtenez
+```
+'php' n’est pas reconnu en tant que commande interne
+ou externe, un programme exécutable ou un fichier de commandes.
+```
+Essayez de vous reconnecter à votre session utilisateur. Si le problème persiste, veuillez vérifier votre PATH et votre chemin d'installation de PHP.
+
+
+**Alternatives :**
 1. Installer une distribution Linux en Dual Boot
 2. Installer une machine virtuelle avec une distribution Linux => ici [un tuto pour installer Ubuntu avec Hyper-V](https://www.windowscentral.com/how-run-linux-distros-windows-10-using-hyper-v)
 
