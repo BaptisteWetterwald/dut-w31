@@ -1,0 +1,19 @@
+label{
+	color: blueviolet;
+	font-size: large;
+}
+
+section{
+	color: red;
+	font-style: italic;
+	font-size: medium;
+}
+
+input{
+	background-color: antiquewhite;
+	font-size: large;
+}
+
+#submit{
+	background-color: greenyellow;
+}
