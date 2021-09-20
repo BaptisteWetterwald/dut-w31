@@ -12,30 +12,19 @@
 		if (!empty($_SESSION['message']))
 			echo "<section>" . $_SESSION['message'] . "</section>";
 	?>
-	<form action="authenticate.php" method="post">
+	<form action="register_step2.php" method="post">
 		<label for="login">Login:</label>
 		<input type="text" name="login" id="login" required>
 
 		<label for="password">Password:</label>
 		<input type="password" name="password" id="password" required>
 
-		<input id="submit" type="submit" value="Go">
+		<label for="password_bis">Password confirmation:</label>
+		<input type="password" name="password_bis" id="password_bis" required>
+
+		<input id="submit" type="submit" value="Create this account">
 	</form>
-	You still don't have an account? <a href="register.php">Register here!</a>
-	<br>
-	<br>
-	<a href="http://localhost:42069/TP2/signin.php/?debug=true">Debug $users</a>
-	<?php
-		if (!empty($_GET['debug']))
-		{
-			include_once "bdd.php";
-			echo "<br>";
-			foreach ($users as $u => $pass)
-			{
-				echo $u . $pass;
-				echo "<br>";
-			}
-		}
-	?>
+
+	You already have an account? <a href="signin.php">Login here!</a>
 </body>
 </html>

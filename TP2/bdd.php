@@ -3,6 +3,7 @@
 		'baptiste' => 'wett',
 		'toto' => 'ouioui',
 		'yoshi' => 'baslade',
-		'luigi' => 'plombier'
+		'luigi' => 'plombier',
+		'youpi' => 'lion'
 	];
 ?>
