@@ -4,6 +4,6 @@
 		'toto' => 'ouioui',
 		'yoshi' => 'baslade',
 		'luigi' => 'plombier',
-		'youpi' => 'lion'
+		'youpi' => 'lion',
 	];
 ?>
