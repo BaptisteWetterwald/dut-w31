@@ -9,6 +9,7 @@
 	include 'bdd.php';
 
 	$login = htmlentities($_POST['login']);
+
 	if (!array_key_exists($login, $users))
 	{
 		$password = htmlentities($_POST['password']);
