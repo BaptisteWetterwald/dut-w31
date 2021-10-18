@@ -6,7 +6,7 @@
 		exit;
 	}
 	
-	require_once 'bdd.php';
+	require_once 'models/bdd.php';
 
 	$login = strtolower(htmlentities($_POST['login']));
 
@@ -22,6 +22,7 @@
 		if (password_verify($password, $real_password))
 		{
 			$_SESSION['login'] = $login;
+			$_SESSION['message'] = "Successfully logged in!";
 			header("Location: account.php");
 		}
 		else

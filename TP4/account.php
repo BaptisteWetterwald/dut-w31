@@ -5,17 +5,19 @@
 		header('Location: signin.php');
 		exit;
 	}
+	if (!empty($_SESSION['message']))
+		echo "<section>" . $_SESSION['message'] . "</section>";
 ?>
 <!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Salut mon pote !</title>
+  <title>Hey you!</title>
   <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
 </head>
 <body>
-	<h1>Ca dit quoi <?php echo $_SESSION['login']?> ?</h1>
-	<h2>Si tu veux te déco, <a href="signout.php">clique ici</a></h1>
+	<h1>How are you  <?php echo $_SESSION['login']?> ?</h1>
+	<h2><a href="signout.php">Log out</a></h1>
+	<h2>Wanna change your password? <a href="formpassword.php">Click here!</a></h2>
 </body>
 </html>

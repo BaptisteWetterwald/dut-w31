@@ -1,5 +1,7 @@
 <?php
-	$sqliteFile = $_SERVER['DOCUMENT_ROOT'] . '/TP4/tp4.db';
+	$sqliteFile = $_SERVER['DOCUMENT_ROOT'] . '/TP4/models/tp4.db';
+	var_dump($_SERVER['DOCUMENT_ROOT']);
+	var_dump($sqliteFile);
 	$SQL_DSN = 'sqlite:' . $sqliteFile;
 
 	if (!file_exists($sqliteFile))

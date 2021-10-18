@@ -8,18 +8,23 @@
 <body>
 	<?php
 		session_start();
-		if (!empty($_SESSION['message']))
+		if (empty($_SESSION['login']))
+		{
+			header('Location: signin.php');
+			exit;
+		}
+		else if (!empty($_SESSION['message']))
 			echo "<section>" . $_SESSION['message'] . "</section>";
 	?>
-	<form action="authenticate.php" method="post">
-		<label for="login">Login:</label>
-		<input type="text" name="login" id="login" required>
+	<form action="changepassword.php" method="post">
+		<label for="new_password">New password:</label>
+		<input type="password" name="new_password" id="new_password" required>
 
-		<label for="password">Password:</label>
-		<input type="password" name="password" id="password" required>
+		<label for="new_password_bis">Password confirmation:</label>
+		<input type="password" name="new_password_bis" id="new_password_bis" required>
 
 		<input id="submit" type="submit" value="Go">
 	</form>
-	You still don't have an account? <a href="register.php">Register here!</a>
+	Changed your mind?<a href="account.php">Click here!</a>
 </body>
 </html>

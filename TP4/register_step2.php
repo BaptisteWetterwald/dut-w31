@@ -6,7 +6,7 @@
 		exit;
 	}
 
-	require_once 'bdd.php';
+	require_once 'models/bdd.php';
 
 	$request = $pdo->prepare('SELECT login FROM users WHERE login = ?');
 	$request->bindValue(1, strtolower(htmlentities($_POST['login'])), PDO::PARAM_STR);
