@@ -25,34 +25,23 @@ Route::group([], function()
         return view('authenticate');
     });
 
+    Route::get('signin', [UserController::class, 'signin']);
+    Route::get('signup', [UserController::class, 'signup']);
+
     Route::prefix('admin')
     ->middleware('auth.myuser')
     ->group(function()
     {
-
-        Route::get('account', function () {
-            return view('account', ['message'=>$_SESSION['message'] ?? null], ['user'=>$_SESSION['user']]);
-        });
+        Route::get('account', [UserController::class, 'account']);
         Route::post('changepassword', function () {
             return view('changepassword');
         });
         Route::get('deleteuser', function () {
             return view('deleteuser');
         });
-        Route::get('formpassword', function () {
-            return view('formpassword', ['message'=>$_SESSION['message'] ?? null]);
-        });
-        Route::get('signout', function () {
-            session_destroy();
-            return redirect('signin');
-        });
+        Route::get('formpassword', [UserController::class, 'formpassword']);
+        Route::get('signout', [UserController::class, 'signout']);
     });
 
-    Route::get('signin', function () {
-        return view('signin', ['message'=>$_SESSION['message'] ?? null]);
-    });
-
-    Route::get('signup', function () {
-        return view('signup', ['message'=>$_SESSION['message'] ?? null]);
-    });
+    
 });
