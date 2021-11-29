@@ -79,7 +79,7 @@ class UserController extends Controller
         /******************************************************************************
          * Initialisation.
          */
-        $input = $request->all();
+
 
         unset($_SESSION['message']);
 
@@ -90,7 +90,7 @@ class UserController extends Controller
         // 1. On vérifie que la méthode HTTP utilisée est bien POST
 
         // 2. On vérifie que les données attendues existent
-        if ( empty($input['login']) || empty($input['password']) )
+        if ( empty($_POST['login']) || empty($_POST['password']) )
         {
             $_SESSION['message'] = "Some POST data are missing.";
             header('Location: signin');
@@ -98,8 +98,8 @@ class UserController extends Controller
         }
 
         // 3. On sécurise les données reçues
-        $login = htmlspecialchars($input['login']);
-        $password = htmlspecialchars($input['password']);
+        $login = htmlspecialchars($_POST['login']);
+        $password = htmlspecialchars($_POST['password']);
 
         
 
@@ -115,7 +115,7 @@ class UserController extends Controller
             if ( !$user->exists() )
             {
                 $_SESSION['message'] = 'Wrong login/password.';
-                redirect('signin');
+                header('Location: signin');
                 exit();
             }
         }
@@ -123,14 +123,14 @@ class UserController extends Controller
             // Si erreur lors de la création de l'objet PDO
             // (déclenchée par MyPDO::pdo())
             $_SESSION['message'] = $e->getMessage();
-            redirect('signin');
+            header('Location: signin');
             exit();
         }
         catch (Exception $e) {
             // Si erreur durant l'exécution de la requête
             // (déclenchée par le throw de $user->exists())
             $_SESSION['message'] = $e->getMessage();
-            redirect('signin');
+            header('Location: signin');
             exit();
         }
 
@@ -138,7 +138,7 @@ class UserController extends Controller
         $_SESSION['user'] = $login;
 
         // 4. On sollicite une redirection vers la page du compte
-        redirect('admin/account');
+        header('Location: admin/account');
         exit();
     }
 }
