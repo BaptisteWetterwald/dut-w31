@@ -8,6 +8,8 @@
 ?>
 <!DOCTYPE html>
 <html>
+	@extends('layouts.app')
+
 	<head>
 		<meta charset="utf-8">
 		<title>Change password</title>
@@ -15,6 +17,7 @@
 	<body>
 		<h1>Change password</h1>
 		<form action="changepassword" method="post">
+			@csrf
 			<label for="newpassword">New password</label>        <input type="password" id="newpassword"	 name="newpassword"	 required>
 			<label for="confirmpassword">Confirm password</label><input type="password" id="confirmpassword" name="confirmpassword" required>
 			<input type="submit" value="Change my password">
@@ -22,10 +25,5 @@
 		<p>
 			Go back to <a href="account">Home</a>.
 		</p>
-<?php if ( !empty($_SESSION['message']) ) { ?>
-		<section>
-			<p><?= $_SESSION['message'] ?></p>
-		</section>
-<?php } ?>
 	</body>
 </html>
