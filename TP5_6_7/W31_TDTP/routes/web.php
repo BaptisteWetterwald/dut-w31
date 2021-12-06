@@ -21,28 +21,29 @@ Route::group([], function()
     
     Route::post('adduser', function () {
         return view('adduser');
-    });
+    })->name('adduser');
     Route::post('authenticate', function () {
         return view('authenticate');
-    });
+    })->name('authenticate');
 
-    Route::get('signin', [UserController::class, 'signin']);
-    Route::get('signup', [UserController::class, 'signup']);
+    Route::get('signin', [UserController::class, 'signin'])->name('signin');
+    Route::get('signup', [UserController::class, 'signup'])->name('signup');
 
     Route::prefix('admin')
+    ->name('admin')
     ->middleware('auth.myuser')
-    ->group(function()
-    {
-        Route::get('account', [UserController::class, 'account']);
-        Route::post('changepassword', function () {
-            return view('changepassword');
-        });
-        Route::get('deleteuser', function () {
-            return view('deleteuser');
-        });
-        Route::get('formpassword', [UserController::class, 'formpassword']);
-        Route::get('signout', [UserController::class, 'signout']);
-    });
-
-    
+    ->group(
+        function()
+        {
+            Route::get('account', [UserController::class, 'account'])->name('account');
+            Route::post('changepassword', function () {
+                return view('changepassword');
+            })->name('changepassword');
+            Route::get('deleteuser', function () {
+                return view('deleteuser');
+            })->name('deleteuser');
+            Route::get('formpassword', [UserController::class, 'formpassword'])->name('formpassword');
+            Route::get('signout', [UserController::class, 'signout'])->name('signout');
+        }
+    );
 });

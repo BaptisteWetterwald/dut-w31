@@ -17,7 +17,7 @@ class EnsureMyUserIsAuthenticated
     public function handle(Request $request, Closure $next)
     {
         if (!isset($_SESSION['user']))
-            return redirect('signin');
+            return redirect()->route('signin');
         return $next($request);
     }
 }

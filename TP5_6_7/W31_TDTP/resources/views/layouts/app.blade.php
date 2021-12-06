@@ -3,10 +3,8 @@
 		<title>@yield('title')</title>
 	</head>
     <body>
-        @yield('header')
         @section('content')
-			<h1>Ma page</h1>
-		@endsection
+			<h1>@yield('title')</h1>
 		@show
         @include('shared.message')
     </body>
