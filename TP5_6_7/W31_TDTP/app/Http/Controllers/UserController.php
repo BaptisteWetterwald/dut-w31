@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function signin( Request $request )
     {
-        return view('signin', ['message'=>$_SESSION['message'] ?? null]);
+        return view('signin', ['message'=>$request->session()->get('message') ?? null]);
     }
 
     /**
@@ -31,7 +31,7 @@ class UserController extends Controller
      */
     public function signup( Request $request )
     {
-        return view('signup', ['message'=>$_SESSION['message'] ?? null]);
+        return view('signup', ['message'=>$request->session()->get('message') ?? null]);
     }
 
     /**
@@ -42,7 +42,7 @@ class UserController extends Controller
      */
     public function formpassword( Request $request )
     {
-        return view('formpassword', ['message'=>$_SESSION['message'] ?? null]);
+        return view('formpassword', ['message'=>$request->session()->get('message') ?? null]);
     }
 
     /**
@@ -53,7 +53,7 @@ class UserController extends Controller
      */
     public function signout( Request $request )
     {
-        session_destroy();
+        $request->session()->flush();
         return redirect()->route('signin');
     }
 
@@ -65,7 +65,7 @@ class UserController extends Controller
      */
     public function account( Request $request )
     {
-        return view('account', ['message'=>$_SESSION['message'] ?? null], ['user'=>$_SESSION['user']]);
+        return view('account', ['message'=>$request->session()->get('message') ?? null], ['user'=>$request->session()->get('user')]);
     }
 
     /**
@@ -81,8 +81,6 @@ class UserController extends Controller
          */
         $input = $request->all();
 
-        unset($_SESSION['message']);
-
         /******************************************************************************
          * Traitement des données de la requête
          */
@@ -92,8 +90,7 @@ class UserController extends Controller
         // 2. On vérifie que les données attendues existent
         if ( empty($input['login']) || empty($input['password']) )
         {
-            $_SESSION['message'] = "Some POST data are missing.";
-            return redirect()->route('signin');
+            return redirect()->route('signin')->with('message', "Some POST data are missing.");
         }
 
         // 3. On sécurise les données reçues
@@ -111,25 +108,22 @@ class UserController extends Controller
         try {
             if ( !$user->exists() )
             {
-                $_SESSION['message'] = 'Wrong login/password.';
-                return redirect()->route('signin');
+                return redirect()->route('signin')->with('message', "Wrong login/password.");
             }
         }
         catch (\PDOException $e) {
             // Si erreur lors de la création de l'objet PDO
             // (déclenchée par MyPDO::pdo())
-            $_SESSION['message'] = $e->getMessage();
-            return redirect()->route('signin');
+            return redirect()->route('signin')->with('message', $e->getMessage());
         }
         catch (\Exception $e) {
             // Si erreur durant l'exécution de la requête
             // (déclenchée par le throw de $user->exists())
-            $_SESSION['message'] = $e->getMessage();
-            return redirect()->route('signin');
+            return redirect()->route('signin')->with('message', $e->getMessage());
         }
 
         // 3. On sauvegarde le login dans la session
-        $_SESSION['user'] = $login;
+        $request->session()->put('user', $login);
 
         // 4. On sollicite une redirection vers la page du compte
         return redirect()->route('account');
@@ -148,8 +142,6 @@ class UserController extends Controller
          */
         $input = $request->all();
 
-        unset($_SESSION['message']);
-
         /******************************************************************************
          * Traitement des données de la requête
          */
@@ -159,8 +151,7 @@ class UserController extends Controller
         // 2. On vérifie que les données attendues existent
         if ( empty($input['login']) || empty($input['password']) || empty($input['confirm']) )
         {
-            $_SESSION['message'] = "Some POST data are missing.";
-            return redirect('signup');
+            return redirect('signup')->with('message', "Some POST data are missing.");
         }
 
         // 3. On sécurise les données reçues
@@ -171,8 +162,7 @@ class UserController extends Controller
         // 4. On vérifie que les deux mots de passe correspondent
         if ( $password !== $confirm )
         {
-            $_SESSION['message'] = "The two passwords differ.";
-            return redirect('signup');
+            return redirect('signup')->with('message', "The two passwords differ.");
         }
 
         /******************************************************************************
@@ -189,21 +179,16 @@ class UserController extends Controller
         catch (\PDOException $e) {
             // Si erreur lors de la création de l'objet PDO
             // (déclenchée par MyPDO::pdo())
-            $_SESSION['message'] = $e->getMessage();
-            return redirect('signup');
+            return redirect('signup')->with('message', $e->getMessage());
         }
         catch (\Exception $e) {
             // Si erreur durant l'exécution de la requête
             // (déclenchée par le throw de $user->create())
-            $_SESSION['message'] = $e->getMessage();
-            return redirect('signup');
+            return redirect('signup')->with('message', $e->getMessage());
         }
 
-        // 3. On indique que le compte a bien été créé
-        $_SESSION['message'] = "Account created! Now, signin.";
-
         // 4. On sollicite une redirection vers la page d'accueil
-        return redirect('signin');
+        return redirect('signin')->with('message', "Account created! Now, signin.");
     }
 
     /**
@@ -218,20 +203,18 @@ class UserController extends Controller
          * Initialisation.
         */
         $input = $request->all();
-        unset($_SESSION['message']);
-
         /******************************************************************************
          * Vérification de la session
         */
 
         // 1. On vérifie que l'utilisateur est connecté
-        if ( empty($_SESSION['user']) )
+        if ( empty($request->session()->get('user')) )
         {
             return redirect('signin');
         }
 
         // 2. On récupère le login dans une variable
-        $login = $_SESSION['user'];
+        $login = $request->session()->get('user');
 
         /******************************************************************************
          * Traitement des données de la requête
@@ -242,8 +225,7 @@ class UserController extends Controller
         // 2. On vérifie que les données attendues existent
         if ( empty($input['newpassword']) || empty($input['confirmpassword']) )
         {
-            $_SESSION['message'] = "Some POST data are missing.";
-            return redirect('admin/formpassword');
+            return redirect('admin/formpassword')->with('message', "Some POST data are missing.");
         }
 
         // 3. On sécurise les données reçues
@@ -253,8 +235,7 @@ class UserController extends Controller
         // 4. On s'assure que les 2 mots de passes sont identiques
         if ( $newpassword != $confirmpassword )
         {
-            $_SESSION['message'] = "Error: passwords are different.";
-            return redirect('admin/formpassword');
+            return redirect('admin/formpassword')->with('message', "Error: passwords are different.");
         }
 
         /******************************************************************************
@@ -271,21 +252,16 @@ class UserController extends Controller
         catch (\PDOException $e) {
             // Si erreur lors de la création de l'objet PDO
             // (déclenchée par MyPDO::pdo())
-            $_SESSION['message'] = $e->getMessage();
-            return redirect('admin/formpassword');
+            return redirect('admin/formpassword')->with('message', $e->getMessage());
         }
         catch (\Exception $e) {
             // Si erreur durant l'exécution de la requête
             // (déclenchée par le throw de $user->changePassword())
-            $_SESSION['message'] = $e->getMessage();
-            return redirect('admin/formpassword');
+            return redirect('admin/formpassword')->with('message', $e->getMessage());
         }
 
-        // 3. On indique que le mot de passe a bien été modifié
-        $_SESSION['message'] = "Password successfully updated.";
-
         // 4. On sollicite une redirection vers la page du compte
-        return redirect('account');
+        return redirect('account')->with('message', "Password successfully updated.");
     }
 
     /**
@@ -301,20 +277,18 @@ class UserController extends Controller
          */
         $input = $request->all();
 
-        unset($_SESSION['message']);
-
         /******************************************************************************
          * Vérification de la session
          */
 
         // 1. On vérifie que l'utilisateur est connecté
-        if ( empty($_SESSION['user']) )
+        if ( empty($request->session()->get('user')) )
         {
             return redirect('signin');
         }
 
         // 2. On récupère le login dans une variable
-        $login = $_SESSION['user'];
+        $login = $request->session()->get('user');
 
         /******************************************************************************
          * Suppression de l'utilisateur
@@ -330,25 +304,20 @@ class UserController extends Controller
         catch (\PDOException $e) {
             // Si erreur lors de la création de l'objet PDO
             // (déclenchée par MyPDO::pdo())
-            $_SESSION['message'] = $e->getMessage();
-            return redirect('admin/account');
+            return redirect('admin/account')->with('message', $e->getMessage());
         }
         catch (\Exception $e) {
             // Si erreur durant l'exécution de la requête
             // (déclenchée par le throw de $user->create())
-            $_SESSION['message'] = $e->getMessage();
-            return redirect('admin/account');
+            return redirect('admin/account')->with('message', $e->getMessage());
         }
 
         // 3. On détruit la session
-        session_destroy();
+        $request->session()->flush();
 
         // 4. On crée une nouvelle session
 
-        // 5. On indique que le compte a bien été supprimé
-        $_SESSION['message'] = "Account successfully deleted.";
-
         // 6. On sollicite une redirection vers la page d'accueil
-        return redirect('signin');
+        return redirect('signin')->with('message', "Account successfully deleted.");
     }
 }

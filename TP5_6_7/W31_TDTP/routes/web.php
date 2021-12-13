@@ -13,37 +13,23 @@ use App\Http\Middleware\EnsureMyUserIsAuthenticated;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group([], function()
-{
-    session_start();
+Route::get('/', [UserController::class, 'signin']);
 
-    Route::get('/', [UserController::class, 'signin']);
-    
-    Route::post('adduser', function () {
-        return view('adduser');
-    })->name('adduser');
-    Route::post('authenticate', function () {
-        return view('authenticate');
-    })->name('authenticate');
+Route::post('adduser',[UserController::class, 'adduser'])->name('adduser');
+Route::post('authenticate', [UserController::class, 'authenticate'])->name('authenticate');
 
-    Route::get('signin', [UserController::class, 'signin'])->name('signin');
-    Route::get('signup', [UserController::class, 'signup'])->name('signup');
+Route::get('signin', [UserController::class, 'signin'])->name('signin');
+Route::get('signup', [UserController::class, 'signup'])->name('signup');
 
-    Route::prefix('admin')
-    ->name('admin')
-    ->middleware('auth.myuser')
-    ->group(
-        function()
-        {
-            Route::get('account', [UserController::class, 'account'])->name('account');
-            Route::post('changepassword', function () {
-                return view('changepassword');
-            })->name('changepassword');
-            Route::get('deleteuser', function () {
-                return view('deleteuser');
-            })->name('deleteuser');
-            Route::get('formpassword', [UserController::class, 'formpassword'])->name('formpassword');
-            Route::get('signout', [UserController::class, 'signout'])->name('signout');
-        }
-    );
-});
+Route::prefix('admin')
+->middleware('auth.myuser')
+->group(
+    function()
+    {
+        Route::get('account', [UserController::class, 'account'])->name('account');
+        Route::post('changepassword', [UserController::class, 'changepassword'])->name('changepassword');
+        Route::get('deleteuser',[UserController::class, 'deleteuser'])->name('deleteuser');
+        Route::get('formpassword', [UserController::class, 'formpassword'])->name('formpassword');
+        Route::get('signout', [UserController::class, 'signout'])->name('signout');
+    }
+);

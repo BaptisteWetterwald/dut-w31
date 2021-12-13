@@ -10,6 +10,6 @@
 		<input type="submit" value="Signin">
 	</form>
 	<p>
-		If you don't have an account, <a href="{{ route('signup') }}">signup</a> first.
+		If you don't have an account, <a href="{{ route('signup') }}">signup</a> first.
 	</p>
 	@endsection
