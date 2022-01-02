@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<p>
-			Hello {{ $user }} !<br>
+			Hello {{ $user->user }} !<br>
 			Welcome on your account.
 		</p>
 		<ul>

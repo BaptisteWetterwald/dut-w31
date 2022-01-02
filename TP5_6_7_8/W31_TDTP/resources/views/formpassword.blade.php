@@ -1,11 +1,3 @@
-<?php
-	
-	if ( empty($_SESSION['user']) )
-	{
-		header('Location: signin');
-		exit();
-	}
-?>
 <!DOCTYPE html>
 <html>
 	@extends('layouts.app')

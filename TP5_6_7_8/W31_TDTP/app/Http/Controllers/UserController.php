@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 /******************************************************************************
  * Chargement du model
  */
 
-use App\Models\MyUser;
+use App\Models\UserEloquent;
 
 class UserController extends Controller
 {
@@ -79,7 +80,6 @@ class UserController extends Controller
         /******************************************************************************
          * Initialisation.
          */
-        $input = $request->all();
 
         /******************************************************************************
          * Traitement des données de la requête
@@ -88,42 +88,45 @@ class UserController extends Controller
         // 1. On vérifie que la méthode HTTP utilisée est bien POST
 
         // 2. On vérifie que les données attendues existent
-        if ( empty($input['login']) || empty($input['password']) )
-        {
-            return redirect()->route('signin')->with('message', "Some POST data are missing.");
-        }
 
-        // 3. On sécurise les données reçues
-        $login = htmlspecialchars($input['login']);
-        $password = htmlspecialchars($input['password']);
+        if ( !$request->filled(['login', 'password']) )
+            return redirect()->route('signin')->with('error','Some POST data are missing.');
 
         /******************************************************************************
          * Authentification
          */
 
         // 1. On crée l'utilisateur avec les identifiants passés en POST
-        $user = new MyUser($login,$password);
+        //$user = new MyUser($login, $password);
 
         // 2. On vérifie qu'il existe dans la BDD
         try {
-            if ( !$user->exists() )
-            {
+            $user = UserEloquent::where('user', $request->login)->firstOrFail();
+            // On vérifie que les mdp sont les mêmes
+            $hashedPassword = $user->password;
+            if (!Hash::check($request->password, $hashedPassword))
                 return redirect()->route('signin')->with('message', "Wrong login/password.");
-            }
+            // 3. On sauvegarde le login dans la session
+            $request->session()->put('user', $user);
         }
-        catch (\PDOException $e) {
+        catch (ModelNotFoundException $e)
+        {
+            return redirect()->route('signin')->with('message', $e->getMessage());
+        }
+        catch (\PDOException $e) 
+        {
             // Si erreur lors de la création de l'objet PDO
             // (déclenchée par MyPDO::pdo())
             return redirect()->route('signin')->with('message', $e->getMessage());
         }
-        catch (\Exception $e) {
+        catch (\Exception $e) 
+        {
             // Si erreur durant l'exécution de la requête
             // (déclenchée par le throw de $user->exists())
             return redirect()->route('signin')->with('message', $e->getMessage());
         }
 
-        // 3. On sauvegarde le login dans la session
-        $request->session()->put('user', $login);
+        
 
         // 4. On sollicite une redirection vers la page du compte
         return redirect()->route('account');
@@ -170,17 +173,25 @@ class UserController extends Controller
          */
 
         // 1. On crée l'utilisateur avec les identifiants passés en POST
-        $user = new MyUser($login,$password);
+        //$user = new MyUser($login,$password);
 
         // 2. On crée l'utilisateur dans la BDD
         try {
-            $user->create();
+            $user = new UserEloquent;
+            $user->user = $login;
+            $user->password = Hash::make($password);
+            $user->save();
         }
         catch (\PDOException $e) {
             // Si erreur lors de la création de l'objet PDO
             // (déclenchée par MyPDO::pdo())
             return redirect('signup')->with('message', $e->getMessage());
         }
+
+        catch (\QueryException $e) {
+            return redirect('signup')->with('message', $e->getMessage());
+        }
+
         catch (\Exception $e) {
             // Si erreur durant l'exécution de la requête
             // (déclenchée par le throw de $user->create())
@@ -208,22 +219,20 @@ class UserController extends Controller
         */
 
         // 1. On vérifie que l'utilisateur est connecté
-        if ( empty($request->session()->get('user')) )
+        if ( !$request->session()->has('user') )
         {
             return redirect('signin');
         }
 
         // 2. On récupère le login dans une variable
-        $login = $request->session()->get('user');
+        $user = $request->session()->get('user');
 
         /******************************************************************************
          * Traitement des données de la requête
          */
 
-        // 1. On vérifie que la méthode HTTP utilisée est bien POST
-
         // 2. On vérifie que les données attendues existent
-        if ( empty($input['newpassword']) || empty($input['confirmpassword']) )
+        if ( !$request->filled(['newpassword', 'confirmpassword']))
         {
             return redirect('admin/formpassword')->with('message', "Some POST data are missing.");
         }
@@ -243,12 +252,16 @@ class UserController extends Controller
          */
 
         // 1. On crée l'utilisateur avec les identifiants passés en POST
-        $user = new MyUser($login);
+        //$user = new MyUser($login);
+
 
         // 2. On change le mot de passe de l'utilisateur
         try {
-            $user->changePassword($newpassword);
+            //$user = UserEloquent::where('user', $login)->firstOrFail();
+            $user->password = Hash::make($newpassword);
+            $user->save();
         }
+        
         catch (\PDOException $e) {
             // Si erreur lors de la création de l'objet PDO
             // (déclenchée par MyPDO::pdo())
@@ -261,7 +274,7 @@ class UserController extends Controller
         }
 
         // 4. On sollicite une redirection vers la page du compte
-        return redirect('account')->with('message', "Password successfully updated.");
+        return redirect('admin/account')->with('message', "Password successfully updated.");
     }
 
     /**
@@ -282,20 +295,17 @@ class UserController extends Controller
          */
 
         // 1. On vérifie que l'utilisateur est connecté
-        if ( empty($request->session()->get('user')) )
+        if ( !$request->session()->has('user') )
         {
             return redirect('signin');
         }
 
         // 2. On récupère le login dans une variable
-        $login = $request->session()->get('user');
+        $user = $request->session()->get('user');
 
         /******************************************************************************
          * Suppression de l'utilisateur
          */
-
-        // 1. On crée l'utilisateur avec les identifiants passés en POST
-        $user = new MyUser($login);
 
         // 2. On détruit l'utilisateur dans la BDD
         try {
