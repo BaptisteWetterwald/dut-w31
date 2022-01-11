@@ -47,6 +47,17 @@ class UserController extends Controller
     }
 
     /**
+     * Shows the formrank page
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function formrank( Request $request )
+    {
+        return view('formrank', ['message'=>$request->session()->get('message') ?? null]);
+    }
+
+    /**
      * Shows the signout page
      *
      * @param  \Illuminate\Http\Request  $request
@@ -69,6 +80,17 @@ class UserController extends Controller
         return view('account', ['message'=>$request->session()->get('message') ?? null], ['user'=>$request->session()->get('user')]);
     }
 
+    /**
+     * Shows the profile page
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function profile( Request $request )
+    {
+        return view('profile', ['message'=>$request->session()->get('message') ?? null], ['user'=>$request->session()->get('user')]);
+    }
+    
     /**
      * Shows the auth page
      *
@@ -152,7 +174,7 @@ class UserController extends Controller
         // 1. On vérifie que la méthode HTTP utilisée est bien POST
 
         // 2. On vérifie que les données attendues existent
-        if ( empty($input['login']) || empty($input['password']) || empty($input['confirm']) )
+        if ( empty($input['login']) || empty($input['password']) || empty($input['confirm']) || empty($input['rank']))
         {
             return redirect('signup')->with('message', "Some POST data are missing.");
         }
@@ -180,6 +202,7 @@ class UserController extends Controller
             $user = new UserEloquent;
             $user->user = $login;
             $user->password = Hash::make($password);
+            $user->rank = $input['rank'];
             $user->save();
         }
         catch (\PDOException $e) {
@@ -200,6 +223,63 @@ class UserController extends Controller
 
         // 4. On sollicite une redirection vers la page d'accueil
         return redirect('signin')->with('message', "Account created! Now, signin.");
+    }
+
+    /**
+     * Shows the changerank page
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function changerank( Request $request )
+    {
+        /******************************************************************************
+         * Initialisation.
+        */
+        $input = $request->all();
+        /******************************************************************************
+         * Vérification de la session
+        */
+
+        // 1. On vérifie que l'utilisateur est connecté
+        if ( !$request->session()->has('user') )
+        {
+            return redirect('signin');
+        }
+
+        // 2. On récupère le login dans une variable
+        $user = $request->session()->get('user');
+
+        /******************************************************************************
+         * Traitement des données de la requête
+         */
+
+        // 2. On vérifie que les données attendues existent
+        if ( !$request->filled(['rank']))
+        {
+            return redirect('admin/formrank')->with('message', "Some POST data are missing.");
+        }
+
+        // 2. On change le mot de passe de l'utilisateur
+        try {
+            //$user = UserEloquent::where('user', $login)->firstOrFail();
+            $user->rank = $request->input('rank');
+            $user->save();
+        }
+        
+        catch (\PDOException $e) {
+            // Si erreur lors de la création de l'objet PDO
+            // (déclenchée par MyPDO::pdo())
+            return redirect('admin/formrank')->with('message', $e->getMessage());
+        }
+        catch (\Exception $e) {
+            // Si erreur durant l'exécution de la requête
+            // (déclenchée par le throw de $user->changePassword())
+            return redirect('admin/formrank')->with('message', $e->getMessage());
+        }
+
+        // 4. On sollicite une redirection vers la page du compte
+        return redirect('admin/account')->with('message', "Rank successfully updated.");
     }
 
     /**

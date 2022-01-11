@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserEloquentsTable extends Migration
+class CreateRecipesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateUserEloquentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('UserEloquent', function (Blueprint $table) {
-            $table->id('user_id');
-            $table->string('user')->unique();
-            $table->string('password', 256);
-            $table->string('rank');
+        Schema::create('recipes', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -28,6 +26,6 @@ class CreateUserEloquentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('UserEloquent');
+        Schema::dropIfExists('recipes');
     }
 }

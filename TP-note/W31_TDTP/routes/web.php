@@ -31,5 +31,8 @@ Route::prefix('admin')
         Route::get('deleteuser',[UserController::class, 'deleteuser'])->name('deleteuser');
         Route::get('formpassword', [UserController::class, 'formpassword'])->name('formpassword');
         Route::get('signout', [UserController::class, 'signout'])->name('signout');
+        Route::get('profile', [UserController::class, 'profile'])->name('profile');
+        Route::get('formrank', [UserController::class, 'formrank'])->name('formrank');
+        Route::post('changerank', [UserController::class, 'changerank'])->name('changerank');
     }
 );

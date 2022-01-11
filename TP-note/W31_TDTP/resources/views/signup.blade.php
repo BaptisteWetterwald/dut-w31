@@ -14,6 +14,10 @@
 			<label for="login">Login</label>             <input type="text"     id="login"    name="login"    required autofocus>
 			<label for="password">Password</label>       <input type="password" id="password" name="password" required>
 			<label for="confirm">Confirm password</label><input type="password" id="confirm"  name="confirm"  required>
+			
+			<label for="rank">Cooker rank:</label>
+			@include('shared.rank')
+
 			<input type="submit" value="Signup">
 		</form>
 		<p>
