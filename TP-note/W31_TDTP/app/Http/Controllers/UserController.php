@@ -45,17 +45,7 @@ class UserController extends Controller
     {
         return view('formpassword', ['message'=>$request->session()->get('message') ?? null]);
     }
-
-    /**
-     * Shows the formrank page
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function formrank( Request $request )
-    {
-        return view('formrank', ['message'=>$request->session()->get('message') ?? null]);
-    }
+    
 
     /**
      * Shows the signout page
@@ -255,7 +245,7 @@ class UserController extends Controller
          */
 
         // 2. On vérifie que les données attendues existent
-        if ( !$request->filled(['rank']))
+        if ( !$request->filled(['newrank']))
         {
             return redirect('admin/formrank')->with('message', "Some POST data are missing.");
         }
@@ -263,7 +253,7 @@ class UserController extends Controller
         // 2. On change le mot de passe de l'utilisateur
         try {
             //$user = UserEloquent::where('user', $login)->firstOrFail();
-            $user->rank = $request->input('rank');
+            $user->password = $request->input('newrank');
             $user->save();
         }
         

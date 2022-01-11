@@ -16,8 +16,8 @@ class CreateUserEloquentsTable extends Migration
         Schema::create('UserEloquent', function (Blueprint $table) {
             $table->id('user_id');
             $table->string('user')->unique();
-            $table->string('password', 256);
-            $table->string('rank');
+            $table->string('password', 256)->nullable(false);
+            $table->string('rank')->nullable(false);
         });
     }
 

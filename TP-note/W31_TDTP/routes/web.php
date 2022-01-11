@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RecipeController;
+
 use App\Http\Middleware\EnsureMyUserIsAuthenticated;
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +36,15 @@ Route::prefix('admin')
         Route::get('profile', [UserController::class, 'profile'])->name('profile');
         Route::get('formrank', [UserController::class, 'formrank'])->name('formrank');
         Route::post('changerank', [UserController::class, 'changerank'])->name('changerank');
+    }
+);
+
+Route::prefix('admin')
+->middleware('auth.myuser')
+->group(
+    function()
+    {
+        Route::get('formRecipe', [RecipeController::class, 'formRecipe'])->name('formRecipe');
+        Route::post('addRecipe', [RecipeController::class, 'addRecipe'])->name('addRecipe');
     }
 );

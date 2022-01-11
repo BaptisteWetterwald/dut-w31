@@ -16,6 +16,7 @@
 		<ul>
 			<li><a href="{{ route('profile') }}">My profile</a></li>
 			<li><a href="{{ route('formrank') }}">Change my rank</a></li>
+			<li><a href="{{ route('formRecipe') }}">Add recipe</a></li>
 
 			<li><a href="{{ route('formpassword') }}">Change password.</a></li>
 			<li><a href="{{ route('deleteuser') }}">Delete my account.</a></li>
